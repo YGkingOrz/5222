@@ -1,0 +1,1558 @@
+--- 第 1 页 ---
+Scaling up MAPF
+Daniel D. Harab or
+Monash University
+http://harabor.net/daniel
+1 / 45
+
+--- 第 2 页 ---
+Recap
+Things we want from a MAPF solve r:
+Compute collision-free plans
+For as many agents as p ossible
+Computed as
+fast
+as p ossible
+While maximising throughput (i.e., optimise the eciency of each
+individual agent).
+Optimal algorit hm s can reliably solve MAPF problems with 150+ agents.
+But it's not enough.
+2 / 45
+
+--- 第 3 页 ---
+Application examples
+An amazon parcel sorta tion centre.
+3 / 45
+
+--- 第 4 页 ---
+Application examples
+Rob ots drop parcels into sorted bins, for onward delivery.
+3 / 45
+
+--- 第 5 页 ---
+Application examples
+Up t o 800 agents can b e in op eration at the same time.
+3 / 45
+
+--- 第 6 页 ---
+Application examples
+Flatland Challenge is a industry sp onsored rail planning comp etition.
+3 / 45
+
+--- 第 7 页 ---
+Application examples
+Several t housand agents can b e on the map at t he same time.
+3 / 45
+
+--- 第 8 页 ---
+Tradeos
+We can scale up (and sp eed up) existing MAPF algorithms by relaxing
+some strict requirements.
+4 / 45
+
+--- 第 9 页 ---
+Tradeos
+We can scale up (and sp eed up) existing MAPF algorithms by relaxing
+some strict requirements.
+4 / 45
+
+--- 第 10 页 ---
+Approaches that have b een considered
+5 / 45
+
+--- 第 11 页 ---
+Bounded Sub optimal MAPF
+Daniel D. Harab or
+Monash University
+http://harabor.net/daniel
+6 / 45
+
+--- 第 12 页 ---
+Recap: Conict-Based Search
+Let's try to solve this MAPF instance using CBS
+7 / 45
+
+--- 第 13 页 ---
+Bounded Sub optimal Search
+Idea:
+Accept any plan whose cost
+C
+is not more than some xed
+amount large r than
+C
+
+, the cost of the optimal plan.
+C
+
+w
+
+C
+
+where
+w
+
+1 (w-admissible)
+C
+
+
++
+C
+
+where
+
+
+0 (
+
+-admissible)
+In this CT a
+w
+= 2 sub optimal plan is available but not within reach for CBS.
+8 / 45
+
+--- 第 14 页 ---
+How do we compute b ounded sub optimal plans?
+We use a variant of FOCAL Search
+[
+Pearl and Kim, 1982
+]
+for the high-
+and low - level of CBS.
+In FOCAL search the frontier comprises two lists:
+OPEN, sorted by
+f
+1
+(
+n
+) =
+g
+(
+n
+) +
+h
+(
+n
+) (strict admissibility).
+FOCAL
+
+OPEN, sorted by
+f
+2
+(
+n
+) (p ossibly inadmissible).
+9 / 45
+
+--- 第 15 页 ---
+How do we compute b ounded sub optimal plans?
+We use a variant of FOCAL Search
+[
+Pearl and Kim, 1982
+]
+for the high-
+and low - level of CBS.
+In FOCAL search the frontier comprises two lists:
+OPEN, sorted by
+f
+1
+(
+n
+) =
+g
+(
+n
+) +
+h
+(
+n
+) (strict admissibility).
+FOCAL
+
+OPEN, sorted by
+f
+2
+(
+n
+) (p ossibly inadmissible).
+With a conventional OPEN list we always expand the no de with minimum
+f
+1
+9 / 45
+
+--- 第 16 页 ---
+How do we compute b ounded sub optimal plans?
+We use a variant of FOCAL Search
+[
+Pearl and Kim, 1982
+]
+for the high-
+and low - level of CBS.
+In FOCAL search the frontier comprises two lists:
+OPEN, sorted by
+f
+1
+(
+n
+) =
+g
+(
+n
+) +
+h
+(
+n
+) (strict admissibility).
+FOCAL
+
+OPEN, sorted by
+f
+2
+(
+n
+) (p ossibly inadmissible).
+Notice however that many no des may satisfy the b ounded-sub optimal criteria
+9 / 45
+
+--- 第 17 页 ---
+How do we compute b ounded sub optimal plans?
+We use a variant of FOCAL Search
+[
+Pearl and Kim, 1982
+]
+for the high-
+and low - level of CBS.
+In FOCAL search the frontier comprises two lists:
+OPEN, sorted by
+f
+1
+(
+n
+) =
+g
+(
+n
+) +
+h
+(
+n
+) (strict admissibility).
+FOCAL
+
+OPEN, sorted by
+f
+2
+(
+n
+) (p ossibly inadmissible).
+FOCA L allows us to expand the b ounded sub optimal no des in any order,
+f
+2
+9 / 45
+
+--- 第 18 页 ---
+How do we compute b ounded sub optimal plans?
+We use a variant of FOCAL Search
+[
+Pearl and Kim, 1982
+]
+for the high-
+and low - level of CBS.
+In FOCAL search the frontier comprises two lists:
+OPEN, sorted by
+f
+1
+(
+n
+) =
+g
+(
+n
+) +
+h
+(
+n
+) (strict admissibility).
+FOCAL
+
+OPEN, sorted by
+f
+2
+(
+n
+) (p ossibly inadmissible).
+On termination, FOCAL search can return:
+failure (no plan exists)
+or
+a b ounded-sub optimal plan,
+ˇ
+, and
+(optionally) a b est-known lower-b ound
+LB
+= min
+f
+1
+
+C
+
+9 / 45
+
+--- 第 19 页 ---
+Mo died low-level search
+We use FOCAL Se arch plan single-agent paths. This helps to reduce the
+numb er of collisions in a CBS CT no de. We have:
+f
+1
+=
+g
++
+h
+(with
+h
+= manhattan distanc e) and
+w
+= 1
+:
+5
+f
+2
+= minimum numb e r of conicts.
+We need to re-plan the blue agent.
+10 / 45
+
+--- 第 20 页 ---
+Mo died low-level search
+We use FOCAL Se arch plan single-agent paths. This helps to reduce the
+numb er of collisions in a CBS CT no de. We have:
+f
+1
+=
+g
++
+h
+(with
+h
+= manhattan distanc e) and
+w
+= 1
+:
+5
+f
+2
+= minimum numb e r of conicts.
+This plan is
+f
+1
+-optimal but blue is incompatible with red and green
+10 / 45
+
+--- 第 21 页 ---
+Mo died low-level search
+We use FOCAL Se arch plan single-agent paths. This helps to reduce the
+numb er of collisions in a CBS CT no de. We have:
+f
+1
+=
+g
++
+h
+(with
+h
+= manhattan distanc e) and
+w
+= 1
+:
+5
+f
+2
+= minimum numb e r of conicts.
+High-level CBS will need to split to resolve these problems.
+10 / 45
+
+--- 第 22 页 ---
+Mo died low-level search
+We use FOCAL Se arch plan single-agent paths. This helps to reduce the
+numb er of collisions in a CBS CT no de. We have:
+f
+1
+=
+g
++
+h
+(with
+h
+= manhattan distanc e) and
+w
+= 1
+:
+5
+f
+2
+= minimum numb e r of conicts.
+FOCAL search will return this path which w-sub optimal and conict-free.
+10 / 45
+
+--- 第 23 页 ---
+The situation so far...
+We use FOCAL search inside CBS: to compute a path
+ˇ
+i
+for eac h
+individual agent
+a
+i
+2
+A
+. Thus, for each CT no de we hav e:
+c
+(
+ˇ
+i
+)
+
+w
+
+ˇ
+
+i
+X
+a
+i
+2
+A
+c
+(
+ˇ
+i
+)
+
+w
+
+C
+
+11 / 45
+
+--- 第 24 页 ---
+The situation so far...
+We use FOCAL search inside CBS: to compute a path
+ˇ
+i
+for eac h
+individual agent
+a
+i
+2
+A
+. Thus, for each CT no de we hav e:
+c
+(
+ˇ
+i
+)
+
+w
+
+ˇ
+
+i
+X
+a
+i
+2
+A
+c
+(
+ˇ
+i
+)
+
+w
+
+C
+
+This approach is indeed b ounded sub optimal, but we can do b etter...
+11 / 45
+
+--- 第 25 页 ---
+The situation so far...
+We use FOCAL search inside CBS: to compute a path
+ˇ
+i
+for eac h
+individual agent
+a
+i
+2
+A
+. Thus, for each CT no de we hav e:
+c
+(
+ˇ
+i
+)
+
+w
+
+ˇ
+
+i
+X
+a
+i
+2
+A
+c
+(
+ˇ
+i
+)
+
+w
+
+C
+
+In this CT a
+w
+= 2 sub opt im al plan is available immediately.
+11 / 45
+
+--- 第 26 页 ---
+The situation so far...
+We use FOCAL search inside CBS: to compute a path
+ˇ
+i
+for eac h
+individual agent
+a
+i
+2
+A
+. Thus, for each CT no de we hav e:
+c
+(
+ˇ
+i
+)
+
+w
+
+ˇ
+
+i
+X
+a
+i
+2
+A
+c
+(
+ˇ
+i
+)
+
+w
+
+C
+
+Yet the high-level CBS expands no des in
+f
+-min order!
+11 / 45
+
+--- 第 27 页 ---
+Mo died high-level search
+We use FOCAL Se arch to explore the CBS Conict Tree. We have:
+f
+1
+=
+X
+a
+i
+2
+A
+LB
+i
+(
+a
+i
+)
+f
+2
+= minimum numb er of pairwise conicts
+12 / 45
+
+--- 第 28 页 ---
+Mo died high-level search
+We use FOCAL Se arch to explore the CBS Conict Tree. We have:
+f
+1
+=
+X
+a
+i
+2
+A
+LB
+i
+(
+a
+i
+)
+f
+2
+= minimum numb er of pairwise conicts
+12 / 45
+
+--- 第 29 页 ---
+Mo died high-level search
+We use FOCAL Se arch to explore the CBS Conict Tree. We have:
+f
+1
+=
+X
+a
+i
+2
+A
+LB
+i
+(
+a
+i
+)
+f
+2
+= minimum numb er of pairwise conicts
+Here min
+f
+1
+= 10 and
+w
+(= 2)
+
+min
+f
+1
+= 20
+12 / 45
+
+--- 第 30 页 ---
+Mo died high-level search
+We use FOCAL Se arch to explore the CBS Conict Tree. We have:
+f
+1
+=
+X
+a
+i
+2
+A
+LB
+i
+(
+a
+i
+)
+f
+2
+= minimum numb er of pairwise conicts
+CBS is now free to expand the shallow solution!
+12 / 45
+
+--- 第 31 页 ---
+Mo died high-level search
+We use FOCAL Se arch to explore the CBS Conict Tree. We have:
+f
+1
+=
+X
+a
+i
+2
+A
+LB
+i
+(
+a
+i
+)
+f
+2
+= minimum numb er of pairwise conicts
+CBS with high-level FOCAL search is it self b ounded sub optimal. But for
+b est results, we combine it with low-level FOCAL search.
+12 / 45
+
+--- 第 32 页 ---
+Enhanced CBS
+The combination of FOCAL s earch, at the high- and low- level, is known
+as
+Enhanced CBS
+[
+Barer
+et al.
+, 2014
+]
+.
+This an inue ntial workhorse algorithm for MAPF.
+Easily handles hundreds of agents w it h only small s ub optimality.
+Further improved with heuristics and constraints from optimal CBS
+Recent de velopments in this area:
+Explicit Estimation CBS (EECBS)
+[
+Li
+et al.
+, 2021c
+]
+investigates new
+high-level search strategies for ECBS (the frontier is now comprised
+of three lists instead of two).
+Flex distribution
+[
+Chan
+et al.
+, 2022
+]
+for ECBS (FEECBS)
+investigates how the available sub optimality (\ex") can b e divided
+up amongst the dierent agents.
+13 / 45
+
+--- 第 33 页 ---
+Some results for ECBS
+[
+Li
+et al.
+, 2021c
+]
+14 / 45
+
+--- 第 34 页 ---
+Rule-based MAPF
+Daniel D. Harab or
+Monash University
+http://harabor.net/daniel
+15 / 45
+
+--- 第 35 页 ---
+Rule-based Search Algorithms
+Idea:
+Develop a p olicy that decides how collisions b etween agents will
+b e resolved. i.e., who has priority where, and when.
+Rule-based solve rs are generally iterative algorithms:
+Agents are pro cessed sequentially and in order
+Each agent plans one or more steps towards its target
+Later agents cannot derail the plans of earlier agents
+After every agent is planned, the current state is up dated
+The pro cess continues until succes s (unless terminated so oner)
+16 / 45
+
+--- 第 36 页 ---
+The main ideas
+Two typ es of approaches exist in t his space:
+Move op erators
+Temp oral reservation metho ds
+In this section we lo ok at examples of each typ e:
+The
+Push
+move op erator (Okumura variant
+[
+Okumura
+et al.
+, 2019
+]
+)
+Fixed-order prioritised planning
+17 / 45
+
+--- 第 37 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+In this problem the agents must traverse a narrow passage.
+18 / 45
+
+--- 第 38 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Each iteration every agent plans one step towards it s target.
+18 / 45
+
+--- 第 39 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+The agents are planned sequentially.
+18 / 45
+
+--- 第 40 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Each can move to any adjacent lo cation t hat is not already claimed.
+18 / 45
+
+--- 第 41 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Here we plan Green rst. But the t ile ahead is o ccupied by Red.
+18 / 45
+
+--- 第 42 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Since Green has priority, it claims the tile.
+18 / 45
+
+--- 第 43 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+(Recurse) Red plans next. It tries t o step aisde, but the way is blo cked by Blue.
+18 / 45
+
+--- 第 44 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Since Red has priority, it claims the tile.
+18 / 45
+
+--- 第 45 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+(Recurse) Blue plans next and is forced to st ep aside for Red.
+18 / 45
+
+--- 第 46 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+In the next iteration Green once again pushes Red (pushes Blue).
+18 / 45
+
+--- 第 47 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Once Green passes, all agents can resume toward their targets.
+18 / 45
+
+--- 第 48 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Once Green passes, all agents can resume toward their targets.
+18 / 45
+
+--- 第 49 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+Once Green passes, all agents can resume toward their targets.
+18 / 45
+
+--- 第 50 页 ---
+The
+Push
+move op era tor
+Idea:
+Resolve collisions by rec ursive ly
+pushing
+other agents aside
+...
+18 / 45
+
+--- 第 51 页 ---
+Analysing
+Push
+Pros:
+Simple
+Extremely fast (linear time p er iteration)
+Scales to thousands of agents
+Can sometimes pro duce go o d quality plans
+19 / 45
+
+--- 第 52 页 ---
+Analysing
+Push
+Pros:
+Simple
+Extremely fast (linear time p er iteration)
+Scales to thousands of agents
+Can sometimes pro duce go o d quality plans
+Cons:
+Incomplete
+19 / 45
+
+--- 第 53 页 ---
+Analysing
+Push
+Pros:
+Simple
+Extremely fast (linear time p er iteration)
+Scales to thousands of agents
+Can sometimes pro duce go o d quality plans
+Cons:
+Incomplete
+Push
+fails here due to livelo ck
+19 / 45
+
+--- 第 54 页 ---
+Analysing
+Push
+Pros:
+Simple
+Extremely fast (linear time p er iteration)
+Scales to thousands of agents
+Can sometimes pro duce go o d quality plans
+Cons:
+Incomplete
+Only somewhat aware of the objective function
+19 / 45
+
+--- 第 55 页 ---
+Analysing
+Push
+Pros:
+Simple
+Extremely fast (linear time p er iteration)
+Scales to thousands of agents
+Can sometimes pro duce go o d quality plans
+Cons:
+Incomplete
+Only somewhat aware of the objective function
+Here Blue could m ove up or down. But one is much worse than the other.
+19 / 45
+
+--- 第 56 页 ---
+Recent development for move op erators
+Push
+forms the basis for a very scalable MAPF algorithm known as
+Priority Inheritance with Backtracking (PIBT)
+[
+Okumura
+et al.
+, 2019
+]
+.
+This is a very capable solver. Recent versions can compute go o d quality
+solutions for up to t housands of agents.
+Push
+can also b e combined with other similar move op e rators, such as
+Swap
+, to derive more p owerful and complete MAPF algorithms. The
+state of the art is a called
+Push-and-Rotate
+[
+de Wilde
+et al.
+, 2014
+]
+.
+20 / 45
+
+--- 第 57 页 ---
+The
+Reserve
+op erator
+Idea: use a reservation table to co ordinate
+k
+future timesteps of
+individual agents.
+This (3d) data structure tells the (
+x
+,
+y
+) p osition of an agent for the up coming
+timesteps in the interval [
+t
+,
+t
++
+k
+]
+21 / 45
+
+--- 第 58 页 ---
+Preventing collisions
+Sometimes two (individually planned) agents comp ete for the same lo cation.
+22 / 45
+
+--- 第 59 页 ---
+Preventing collisions
+Sometimes two (individually planned) agents comp ete for the same lo cation.
+22 / 45
+
+--- 第 60 页 ---
+Preventing collisions
+Sometimes two (individually planned) agents comp ete for the same lo cation.
+22 / 45
+
+--- 第 61 页 ---
+Preventing collisions
+Sometimes two (individually planned) agents comp ete for the same lo cation.
+22 / 45
+
+--- 第 62 页 ---
+Preventing collisions
+Sometimes two (individually planned) agents comp ete for the same lo cation.
+22 / 45
+
+--- 第 63 页 ---
+Preventing collisions
+We set 2
+>
+1 which gives agent 2 priority at the conict lo cation
+22 / 45
+
+--- 第 64 页 ---
+Preventing collisions
+Agent 1 meanwhile must nd a new path that avoids the conict lo cation.
+22 / 45
+
+--- 第 65 页 ---
+Preventing collisions
+Usually we replan to the goal no de. Another option is to search only to the next
+wayp oint on the old (individually optimal) path. This is faster, but could b e
+worse (cost, aesthetic app eal).
+22 / 45
+
+--- 第 66 页 ---
+Generalising
+Reserve
+Reserve-1
+works well for b oth edge and vertex collisions. But we can
+also decomp ose it to derive a family of related techniques.
+The main comp one nts are:
+Agent selection (who gets priority?)
+Reserve horizon (how many steps ahead to reserve?)
+Replanning strategy (to the targe t? to a wayp oint?)
+Various instantiations of this family are widely used in practice.
+23 / 45
+
+--- 第 67 页 ---
+Generalising
+Reserve
+Reserve-1
+works well for b oth edge and vertex collisions. But we can
+also decomp ose it to derive a family of related techniques.
+The main comp one nts are:
+Agent selection (who gets priority?)
+Reserve horizon (how many steps ahead to reserve?)
+Replanning strategy (to the targe t? to a wayp oint?)
+Various instantiations of this family are widely used in practice.
+23 / 45
+
+--- 第 68 页 ---
+Prioritised Planning
+[
+Erdmann and Lozano-Perez, 1987
+]
+Idea:
+Reserve the (spatio-temp oral) shortest path of each agent.
+We plan the agents one by one.
+24 / 45
+
+--- 第 69 页 ---
+Prioritised Planning
+[
+Erdmann and Lozano-Perez, 1987
+]
+Idea:
+Reserve the (spatio-temp oral) shortest path of each agent.
+Red go es rst and reserves its individually optimal path.
+24 / 45
+
+--- 第 70 页 ---
+Prioritised Planning
+[
+Erdmann and Lozano-Perez, 1987
+]
+Idea:
+Reserve the (spatio-temp oral) shortest path of each agent.
+Green is next. It must avoid the path of the higher-priority Red agent.
+24 / 45
+
+--- 第 71 页 ---
+Prioritised Planning
+[
+Erdmann and Lozano-Perez, 1987
+]
+Idea:
+Reserve the (spatio-temp oral) shortest path of each agent.
+Each subsequent agent avoids all those previously planned.
+24 / 45
+
+--- 第 72 页 ---
+Prioritised Planning
+[
+Erdmann and Lozano-Perez, 1987
+]
+Idea:
+Reserve the (spatio-temp oral) shortest path of each agent.
+Notice high priority agents never wait for any low priority agents.
+24 / 45
+
+--- 第 73 页 ---
+Prioritised Planning
+[
+Erdmann and Lozano-Perez, 1987
+]
+Idea:
+Reserve the (spatio-temp oral) shortest path of each agent.
+If all agents have a feasible path, the problem is solved.
+24 / 45
+
+--- 第 74 页 ---
+Pros and Cons
+Prioritised Planning is extremely p opular in practice.
+Pros:
+Simple (one agent at a time)
+Fast (one agent at a time!)
+Cons:
+Not optimal
+Not complete in general (ce rtain problem setups avoid this)
+Not clear how t o nd a go o d ordering
+25 / 45
+
+--- 第 75 页 ---
+Recent developments in this area
+Priority-Based Search (PBS)
+[
+Ma
+et al.
+, 2019
+]
+is CBS-like planner that
+xes priorities b etween two agents only in the event of a conict. This
+strategy is much more eective than conventional ordering strategies.
+Rolling Horizon Collision Resolution (RHCR)
+[
+Li
+et al.
+, 2020
+]
+is an
+iterated priority planner that reserves only
+k
+steps in advance (cf. the
+entire path). Authors rep ort large p erformance gains for teams of up to
+1000 agents.
+26 / 45
+
+--- 第 76 页 ---
+Large Neighb ourho o d Search
+Daniel D. Harab or
+Monash University
+http://harabor.net/daniel
+27 / 45
+
+--- 第 77 页 ---
+The story so far
+We want MAPF s olvers that are fast, scalable and maximise throughput.
+The approaches we have seen so far:
+Compute feasible solutions fast (e.g., PIBT)
+Compute close-t o-optimal solutions more slowly (e.g., EECBS)
+Scale to many hundreds (even thousands ) of agents.
+But they are all strongly -coupled, all-or-nothing solvers:
+They tackle the whole problem, in one shot.
+They return a single solution, or failure.
+28 / 45
+
+--- 第 78 页 ---
+The story so far
+Behaviour of anytime optimal and near-optimal CBS variants
+(this exp eriment: 150 agents on 32x32 map with 20% random obstacles)
+28 / 45
+
+--- 第 79 页 ---
+Large Neighb ourho o d Search for MAPF (MAPF-LNS2)
+Idea:
+Solve MAPF problems incrementally; improve the solution over time.
+29 / 45
+
+--- 第 80 页 ---
+Initialize
+Assign collision-minimising paths to each agents.
+Here, we adapt a version of prioritised planning:
+Plan a path for the rst agent (random order)
+Plan a path that
+minimises
+the numb er of collisions with the
+planned path.
+Rep eat steps 1 and 2 until every agent has a path
+NB:
+The rst solution could also b e computed with any other solver
+[
+Li
+et al.
+, 2021a
+]
+.
+30 / 45
+
+--- 第 81 页 ---
+Destroy
+Select a subset of agents that are in collision. We switch b etween several
+dierent strategies that try to identify highly coupled sets of agents.
+Collision neighb ourho o d
+is based on a conict graph. We cho ose
+k
+agents
+from a random selected connected comp onent.
+31 / 45
+
+--- 第 82 页 ---
+Destroy
+Select a subset of agents that are in collision. We switch b etween several
+dierent strategies that try to identify highly coupled sets of agents.
+Failure neighb ourho o d
+. We cho ose an in-collsion agent
+a
+i
+and then select
+other agents that prevent
+a
+i
+from completing its plan, collision-free.
+31 / 45
+
+--- 第 83 页 ---
+Destroy
+Select a subset of agents that are in collision. We switch b etween several
+dierent strategies that try to identify highly coupled sets of agents.
+Random neighb ourho o d
+. We cho ose
+k
+agents at random.
+31 / 45
+
+--- 第 84 页 ---
+Repair
+Assign new collision-minimising paths to the agents in the destroy
+neighb ourho o d.
+Here, we use the same prioritised planning metho d as b efore:
+Plan a path for the rst agent (random order)
+Plan a path that
+minimises
+the numb er of collisions with the
+planned path.
+Rep eat steps 1 and 2 until every agent has a path
+32 / 45
+
+--- 第 85 页 ---
+Adaptive Neighb ourho o d Selection
+LNS tracks how eectively a neighb ourho o d improves the objective (#
+collisions) and switches b etwee n them dynamically.
+Each neighb ourho o d
+N
+i
+is a ssigned a weight
+w
+i
+that tracks its recent success:
+in reducing the numb er of collisions. We select
+N
+i
+with probability
+w
+i
+P
+j
+w
+j
+.
+33 / 45
+
+--- 第 86 页 ---
+Results
+In this exp e rim ent we test scalability on a
+single warehouse map
+We
+compare MAPF-LNS2 with a variety of sub optimal solvers:
+Prioritized Planning (random restarts)
+Parallel Push and Swap (rule-based solver)
+EECBS (b ounded sub optimal)
+34 / 45
+
+--- 第 87 页 ---
+Recent developments in this area
+LNS
+is a workhorse meta-heuristic in Op erations Research
+[
+Shaw, 19 98
+]
+.
+Eectiveness dep ends strongly on go o d strategies for
+destroy
+and
+repair
+MAPF-LNS rst app ears in
+[
+Li
+et al.
+, 2021a
+]
+. This version starts
+from an init ially feasible plan and iteratively improves.
+Later work (MAPF-LNS2)
+[
+Li
+et al.
+, 2022
+]
+improves p erformanc e
+and adds s upp ort for infeasible rs t solutions.
+Other recent work considers how ML can b e used to derive new
+typ es of destroy heuristics
+[
+Huang
+et al.
+, 2022
+]
+.
+Variants of MAPF-LNS obtained
+rst place
+at the 2020 and 2021
+NeurIPS Flatland Challe nge
+[
+Li
+et al.
+, 2021b
+]
+.
+35 / 45
+
+--- 第 88 页 ---
+Summary and Challenges
+Daniel D. Harab or
+Monash University
+http://harabor.net/daniel
+36 / 45
+
+--- 第 89 页 ---
+MAPF is an imp ortant problem
+The proble m MAPF problem asks us t o co ordinate a team of moving
+agents.
+Studied by multiple communities of interest
+Articial Intelligence
+Rob otics
+Industrial practitioners
+Key e nabler for a variety of imp ortant and emerging applications:
+Warehouse fullment
+Mail sortation
+Pip e routing
+Aircraft towing
+Autonmous intersections
+Computer games
+37 / 45
+
+--- 第 90 页 ---
+MAPF problems are tricky to solve
+Finding feasible solutions to MAPF problems is
+tractable
+. But nding
+optimal solutions (and close approximations) is
+hard
+.
+Practitioners have comp eting demands:
+Plans should b e computed fast
+But maximise an objective function
+Additional complications:
+Agent kinematics
+Execution uncertainty
+Op erational constraints
+3D Environments
+38 / 45
+
+--- 第 91 页 ---
+There has b een massiv e progress in MAPF
+We have develop ed strong to ols to address some of the core diculties
+that makes MAPF problem s hard.
+Symmetry breaking consttaints
+Strong heuristic b ounds
+More ecient search-based solvivng techniques
+Compared to just a fe w years ago:
+Optimal search: from dozens of agents to 150+
+Bounded sub optimal: from hundreds to 1000+
+Sub optimal: near-optimal many thousands of moving agents
+39 / 45
+
+--- 第 92 页 ---
+Things that are still hard
+Many opp ortunities exist for further improvement
+Continuous space and time
+Execution-time failures
+Motion Planning
+Online MAPF and
+Multi-agent Pickup and Delivery
+Great topics for PhD theses!
+40 / 45
+
+--- 第 93 页 ---
+Would you like to know more?
+Community website:
+http://mapf.info
+.
+Conferences:
+AAAI and IJCAI (general AI)
+AAMAS (multi-agent AI, relatively general)
+ICRA and IROS (general rob otics)
+International Conference on Planning and Scheduling (ICAPS)
+International Symp osium on Combinatorial Search (SoCS)
+41 / 45
+
+--- 第 94 页 ---
+References
+ I
+Max Barer, Guni Sharon, Roni Stern, and Ariel Felner.
+Sub optima l variants of the conict-b ased search algorithm for the multi-agent
+pathnding problem.
+In
+Seventh Annual Symp osium on Combinatorial Search
+, 2014.
+Shao-Hung Chan, J iaoyang Li, Graeme Gange, Daniel H arab or, Peter J Stuckey,
+and Sven Ko enig.
+Flex distribution for b ounded sub optimal multi-agent path nding.
+In
+Pro ce edings of the AAAI Conference on Articial Intelligence
+, 2022.
+Boris de Wilde, Adriaan ter Mors, and Cees Wittevee n.
+Push and rotate: a complete multi-agent pathnding algorithm.
+J. Artif. Inte ll. Res.
+, 51:443{492, 2014.
+M. A. Erdmann and T. Lozano-Perez.
+On multiple moving objects.
+Algorithmica
+, 2:477{521, 1987.
+42 / 45
+
+--- 第 95 页 ---
+References
+ I I
+Taoan Huang, Jiaoyang Li, Sven Ko enig, and Bistra Dilkina.
+Anytime multi-agent path nd ing via machine learning-guided large
+neighb orho o d search.
+2022.
+Jiaoyang Li, Andrew Tinka, Scott Kiesel, Joseph W Durham, TK Satish Kumar,
+and Sven Ko enig.
+Lifelong multi-agent path nding in large-scale warehouses.
+In
+AAMAS
+, pages 1898{1900, 2020.
+Jiaoyang Li, Zhe Chen, Daniel Harab or, P Stuckey, and Sven Ko enig.
+Anytime multi-agent path nd ing via large neighb orho o d search.
+In
+International Joint Conference on Articial Intelligence (IJCAI)
+, 2021.
+Jiaoyang Li, Zhe Chen, Yi Zheng, Shao-Hung Chan, Daniel Harab or, Peter J
+Stuckey, Hang Ma, and Sven Ko enig.
+Scalable rail planning and replanning: Winning the 2020 atland challenge.
+In
+Pro ce edings of the International Conference on Automa ted Planning and
+Scheduling
+, volume 31, p age s 477{485, 2021.
+43 / 45
+
+--- 第 96 页 ---
+References
+ I I I
+Jiaoyang Li, Wheeler Ruml, and Sven Ko enig.
+EECBS: A b ounded-sub optimal search for multi-agent path nding.
+In
+Pro ce edings of the AAAI Conference on Articial Intelligence (AAAI)
+, pages
+12353{12362, 2021.
+Jiaoyang Li, Zhe Chen, Daniel Harab or, P Stuckey, and Sven Ko enig.
+Mapf-lns2: Fast repairing for multi-agent path nding via large neighb orho o d
+search.
+In
+Pro ce edings of the AAAI Conference on Articial Intelligence (AAAI)
+, 2022.
+Hang Ma, Daniel Harab or, Peter Stuckey, Jiaoyang Li, and Sven Ko enig.
+Searching with Consistent Prioritization for Multi-Agent Path Finding.
+In
+Pro ce edings of the National Conference on A rticial Intelligence (AAAI)
+,
+pages 7643{7650, 2019.
+Keisuke Okumura, Manao Machida, Xavier Defago, and Yasumasa Tamura.
+Priority inheritance with backtracking for iterative multi-agent path nd ing.
+In Sarit Kraus, editor,
+Pro ce edings of the Twen ty-Eighth International Joint
+Conference on Articial Intelligen ce, IJCAI 2019, Macao, China, August 10-16,
+2019
+, pages 535{542. ijcai.org, 2019.
+44 / 45
+
+--- 第 97 页 ---
+References
+ IV
+Judea Pearl and Jin H Kim.
+Studies in semi-admissible he uristics.
+IEEE transactions on pattern analysis and machine intelligence
+, (4):392{399,
+1982.
+P. Shaw.
+Using constraint programming and lo cal search metho ds to solve vehicle routing
+problems.
+In
+CP
+, pages 417{431, 1998.
+45 / 45
+
